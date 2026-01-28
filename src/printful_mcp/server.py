@@ -1,8 +1,9 @@
 """Printful MCP Server - Main server implementation."""
 
+import asyncio
+import atexit
 import os
 import sys
-from contextlib import asynccontextmanager
 from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 
@@ -38,11 +39,22 @@ mcp = FastMCP("printful_mcp")
 _client: PrintfulClient = None
 
 
+def _cleanup_client():
+    """Close the client on exit."""
+    global _client
+    if _client is not None:
+        try:
+            asyncio.get_event_loop().run_until_complete(_client.close())
+        except Exception:
+            pass  # Best effort cleanup
+
+
 def get_client() -> PrintfulClient:
     """Get or create the PrintfulClient instance."""
     global _client
     if _client is None:
         _client = PrintfulClient()
+        atexit.register(_cleanup_client)
     return _client
 
 
