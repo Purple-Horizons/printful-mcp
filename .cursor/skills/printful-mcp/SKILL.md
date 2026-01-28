@@ -158,10 +158,12 @@ Expert guidance for automating Printful print-on-demand workflows using the Prin
 Rate limit: 120 requests per 60 seconds
 ```
 
-**4. Don't use store-specific features on account tokens**
+**4. Store ID is NOT required for most operations**
 ```
-❌ Using account-level token without specifying PRINTFUL_STORE_ID
-✅ Either use single-store token OR set PRINTFUL_STORE_ID env var
+✅ Catalog, orders, mockups, shipping, files → No store_id needed
+✅ Only printful_get_store_stats requires store_id as a parameter
+✅ Single-store API tokens work without any store configuration
+⚠️ PRINTFUL_STORE_ID env var only needed for multi-store account tokens
 ```
 
 ## Tool Reference
@@ -260,11 +262,14 @@ Rate limit: 120 requests per 60 seconds
 - List all your stores
 - Use: Multi-store accounts
 - Returns: Store IDs, names, types
+- ⚠️ **No store_id parameter needed**
 
 **printful_get_store_stats**
 - Sales and profit metrics
+- **Requires: store_id** (get it from `printful_list_stores` first)
 - Optional: Date range, currency
 - Returns: Revenue, costs, profit
+- ⚠️ **This is the ONLY tool that requires store_id as a parameter**
 
 ### 🔄 Sync Product Tools (v1 API)
 
