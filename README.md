@@ -548,7 +548,10 @@ export PRINTFUL_API_KEY=your-key
 In Claude/Cursor
 
 Just ask:
-*"List Printful countries"*
+
+```
+"List Printful countries"
+```
 
 💬 Natural language
 ✨ Real integration test
