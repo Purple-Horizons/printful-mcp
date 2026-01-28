@@ -22,7 +22,7 @@ Connect Printful's powerful API to Claude, Cursor, and other AI assistants throu
 
 ### 🎁 **New to Printful?**
 
-<a href="https://www.printful.com/a/YOUR_AFFILIATE_ID">
+<a href="https://www.printful.com/a/purplehorizons">
   <img src="https://img.shields.io/badge/Sign_Up-Get_Started_Free-FA4616?style=for-the-badge&logo=printful&logoColor=white" alt="Sign up for Printful">
 </a>
 
@@ -61,7 +61,7 @@ Connect Printful's powerful API to Claude, Cursor, and other AI assistants throu
 ### 🚀 **Easy Integration**
 - ✅ Works with Claude Desktop
 - ✅ Works with Cursor IDE
-- ✅ Local execution (stdio)
+- ✅ stdio + HTTP transports
 - ✅ No hosting required
 
 </td>
@@ -154,6 +154,43 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 </details>
 
 ✅ **That's it!** Restart your AI assistant and start using Printful tools.
+
+</details>
+
+---
+
+## 🔌 Transport Options
+
+By default, the server uses **stdio** transport (required for Cursor/Claude Desktop). For HTTP clients or tools like mcporter, you can use HTTP transport.
+
+<details>
+<summary><b>📡 Available Transports</b></summary>
+
+<br>
+
+| Transport | Use Case | Command |
+|-----------|----------|---------|
+| **stdio** (default) | Cursor, Claude Desktop | `python -m printful_mcp` |
+| **http** | HTTP clients, mcporter | `python -m printful_mcp --transport http` |
+| **sse** | Legacy SSE clients | `python -m printful_mcp --transport sse` |
+
+**HTTP Transport Example:**
+```bash
+# Start server on port 8000
+python -m printful_mcp --transport http --port 8000
+
+# Or with custom host
+python -m printful_mcp --transport http --host 0.0.0.0 --port 8080
+```
+
+**Using with mcporter:**
+```bash
+# Option 1: Use JSON args format (recommended)
+mcporter call printful_mcp.printful_list_catalog_products --args '{"limit":20}'
+
+# Option 2: Use typed values (colon for numbers)
+mcporter call printful_mcp.printful_get_product product_id:71
+```
 
 </details>
 
@@ -663,7 +700,7 @@ Have an idea? [Suggest a feature](https://github.com/Purple-Horizons/printful-ph
 
 <br>
 
-<a href="https://www.printful.com/a/YOUR_AFFILIATE_ID">
+<a href="https://www.printful.com/a/purplehorizons">
   <img src="https://img.shields.io/badge/Try_Printful-Start_Free-FA4616?style=for-the-badge&logo=printful&logoColor=white" alt="Try Printful">
 </a>
 

@@ -444,14 +444,17 @@ async def printful_get_sync_product(params: GetSyncProductInput) -> str:
 
 
 def main():
-    """Entry point for the MCP server."""
+    """Entry point for the MCP server (stdio only, for backwards compatibility).
+    
+    For full CLI with transport options, use: python -m printful_mcp --help
+    """
     # Check for API key
     if not os.getenv("PRINTFUL_API_KEY"):
         print("Error: PRINTFUL_API_KEY environment variable is required", file=sys.stderr)
         print("Get your API key from: https://www.printful.com/dashboard/api", file=sys.stderr)
         sys.exit(1)
     
-    # Run the server
+    # Run the server with stdio transport (default for Cursor/Claude Desktop)
     mcp.run(transport="stdio")
 
 

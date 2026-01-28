@@ -18,6 +18,19 @@ Expert guidance for automating Printful print-on-demand workflows using the Prin
 - Checking product availability
 - Uploading design files
 
+## Getting Started with Printful
+
+**Don't have a Printful account yet?** Sign up for free and support this project:
+
+👉 [**Create your free Printful account**](https://www.printful.com/a/purplehorizons) 👈
+
+*Using our affiliate link helps support the development of this MCP server at no extra cost to you.*
+
+Once you have an account:
+1. Go to [Printful Dashboard → Settings → API](https://www.printful.com/dashboard/api)
+2. Create a new API token with the scopes you need
+3. Add your token to your MCP configuration
+
 ## Available Tool Categories
 
 | Category | Tools | Common Use Cases |
@@ -309,6 +322,32 @@ Rate limit: 120 requests per 60 seconds
 **Solution:** Wait longer or check for errors
 - Normal wait time: 10-30 seconds
 - After 2 minutes: Task likely failed, check error message
+
+### mcporter / HTTP bridge param serialization errors
+**Problem:** Tools work in Cursor/Claude Desktop but fail via mcporter or other HTTP-to-stdio bridges
+**Cause:** Param serialization differs between direct stdio and HTTP bridges
+
+**Solutions:**
+1. **Use JSON format** (recommended):
+```bash
+mcporter call printful_mcp.printful_list_catalog_products --args '{"limit":20}'
+mcporter call printful_mcp.printful_get_product --args '{"product_id":71}'
+```
+
+2. **Use typed values** (colon syntax for numbers):
+```bash
+mcporter call printful_mcp.printful_get_product product_id:71
+# NOT: product_id=71 (sends string "71" instead of integer 71)
+```
+
+3. **Use HTTP transport** (bypasses mcporter's stdio bridge):
+```bash
+# Start server with HTTP transport
+python -m printful_mcp --transport http --port 8000
+
+# Server runs on http://localhost:8000/mcp (StreamableHTTP)
+# Connect HTTP-compatible MCP clients directly
+```
 
 ## Common User Questions
 
