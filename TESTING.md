@@ -62,7 +62,7 @@ Or use the provided script:
     "printful": {
       "command": "python",
       "args": ["-m", "printful_mcp"],
-      "cwd": "/Users/gianni-dalerta/Projects/Purple-Horizons/printful-ph-mcp",
+      "cwd": "/absolute/path/to/printful-mcp",
       "env": {
         "PRINTFUL_API_KEY": "your-actual-api-key"
       }

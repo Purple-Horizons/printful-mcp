@@ -19,7 +19,8 @@
 ### 2. Install the MCP Server
 
 ```bash
-cd /Users/gianni-dalerta/Projects/Purple-Horizons/printful-ph-mcp
+git clone https://github.com/Purple-Horizons/printful-mcp.git
+cd printful-mcp
 pip install -e .
 ```
 
@@ -35,7 +36,7 @@ Add this to your Cursor MCP settings file:
     "printful": {
       "command": "python",
       "args": ["-m", "printful_mcp"],
-      "cwd": "/Users/gianni-dalerta/Projects/Purple-Horizons/printful-ph-mcp",
+      "cwd": "/absolute/path/to/printful-mcp",
       "env": {
         "PRINTFUL_API_KEY": "paste-your-api-key-here"
       }
