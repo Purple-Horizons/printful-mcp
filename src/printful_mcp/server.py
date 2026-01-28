@@ -34,21 +34,16 @@ load_dotenv()
 # Initialize MCP server
 mcp = FastMCP("printful_mcp")
 
-# Global client instance
+# Global client instance (lazily initialized)
 _client: PrintfulClient = None
 
 
-@asynccontextmanager
-async def app_lifespan():
-    """Manage PrintfulClient lifecycle."""
+def get_client() -> PrintfulClient:
+    """Get or create the PrintfulClient instance."""
     global _client
-    _client = PrintfulClient()
-    yield {"client": _client}
-    await _client.close()
-
-
-# Set lifespan
-mcp._mcp_server._lifespan = app_lifespan
+    if _client is None:
+        _client = PrintfulClient()
+    return _client
 
 
 # ========== CATALOG TOOLS ==========
@@ -70,7 +65,7 @@ async def printful_list_catalog_products(params: ListCatalogProductsInput) -> st
     Returns a list of available products including t-shirts, mugs, posters, etc.
     Use filters to narrow down by category, color, technique, or product type.
     """
-    return await catalog.list_catalog_products(_client, params)
+    return await catalog.list_catalog_products(get_client(), params)
 
 
 @mcp.tool(
@@ -90,7 +85,7 @@ async def printful_get_product(params: GetProductInput) -> str:
     Returns placements (where designs can be printed), techniques (DTG, embroidery, etc.),
     available sizes/colors, and design requirements.
     """
-    return await catalog.get_product(_client, params)
+    return await catalog.get_product(get_client(), params)
 
 
 @mcp.tool(
@@ -110,7 +105,7 @@ async def printful_get_product_variants(params: GetProductVariantsInput) -> str:
     Each variant has a unique ID needed for ordering. Returns variant IDs,
     names, sizes, colors, and preview images.
     """
-    return await catalog.get_product_variants(_client, params)
+    return await catalog.get_product_variants(get_client(), params)
 
 
 @mcp.tool(
@@ -130,7 +125,7 @@ async def printful_get_variant_prices(params: GetVariantPricesInput) -> str:
     Returns base prices by technique, placement costs, and quantity discounts.
     Helps calculate total order costs before ordering.
     """
-    return await catalog.get_variant_prices(_client, params)
+    return await catalog.get_variant_prices(get_client(), params)
 
 
 @mcp.tool(
@@ -150,7 +145,7 @@ async def printful_get_product_availability(params: GetProductAvailabilityInput)
     Returns in-stock/out-of-stock status for each variant and technique
     by selling region. Critical for displaying product availability.
     """
-    return await catalog.get_product_availability(_client, params)
+    return await catalog.get_product_availability(get_client(), params)
 
 
 # ========== ORDER TOOLS ==========
@@ -172,7 +167,7 @@ async def printful_create_order(params: CreateOrderInput) -> str:
     Creates an empty order with recipient info. Add items separately, then
     confirm to start fulfillment. Draft orders are not charged.
     """
-    return await orders.create_order(_client, params)
+    return await orders.create_order(get_client(), params)
 
 
 @mcp.tool(
@@ -192,7 +187,7 @@ async def printful_get_order(params: GetOrderInput) -> str:
     Returns order status, recipient, costs, items, and shipment info.
     Use order ID or external ID (prefix with @).
     """
-    return await orders.get_order(_client, params)
+    return await orders.get_order(get_client(), params)
 
 
 @mcp.tool(
@@ -212,7 +207,7 @@ async def printful_confirm_order(params: ConfirmOrderInput) -> str:
     Moves order from draft to pending status. Order will be charged and
     sent to production. Cannot be undone easily.
     """
-    return await orders.confirm_order(_client, params)
+    return await orders.confirm_order(get_client(), params)
 
 
 @mcp.tool(
@@ -231,7 +226,7 @@ async def printful_list_orders(params: ListOrdersInput) -> str:
     
     Returns paginated list of orders with status, costs, and item counts.
     """
-    return await orders.list_orders(_client, params)
+    return await orders.list_orders(get_client(), params)
 
 
 # ========== SHIPPING TOOLS ==========
@@ -253,7 +248,7 @@ async def printful_calculate_shipping(params: CalculateShippingInput) -> str:
     Returns available shipping methods, costs, and estimated delivery times
     based on recipient location and order items.
     """
-    return await shipping.calculate_shipping_rates(_client, params)
+    return await shipping.calculate_shipping_rates(get_client(), params)
 
 
 @mcp.tool(
@@ -273,7 +268,7 @@ async def printful_list_countries() -> str:
     Returns country codes and state codes needed for creating orders.
     Essential for address validation.
     """
-    return await shipping.list_countries(_client)
+    return await shipping.list_countries(get_client())
 
 
 # ========== MOCKUP TOOLS ==========
@@ -295,7 +290,7 @@ async def printful_create_mockup_task(params: CreateMockupTaskInput) -> str:
     Creates an async task to generate mockup images showing your design
     on the product. Returns task ID to check status and get URLs.
     """
-    return await mockups.create_mockup_task(_client, params)
+    return await mockups.create_mockup_task(get_client(), params)
 
 
 @mcp.tool(
@@ -315,7 +310,7 @@ async def printful_get_mockup_task(params: GetMockupTaskInput) -> str:
     Returns task status (pending/completed/failed) and mockup image URLs
     if completed. Typically takes 10-30 seconds to generate.
     """
-    return await mockups.get_mockup_task(_client, params)
+    return await mockups.get_mockup_task(get_client(), params)
 
 
 # ========== FILE TOOLS ==========
@@ -337,7 +332,7 @@ async def printful_add_file(params: AddFileInput) -> str:
     Uploads file from URL for reuse across orders. Files are processed
     asynchronously. Returns file ID for use in orders.
     """
-    return await files.add_file(_client, params)
+    return await files.add_file(get_client(), params)
 
 
 @mcp.tool(
@@ -357,7 +352,7 @@ async def printful_get_file(params: GetFileInput) -> str:
     Returns file status, dimensions, DPI, and URLs. Check processing
     status before using in orders.
     """
-    return await files.get_file(_client, params)
+    return await files.get_file(get_client(), params)
 
 
 # ========== STORE TOOLS ==========
@@ -378,7 +373,7 @@ async def printful_list_stores(params: ListStoresInput) -> str:
     
     Returns store IDs and names. Needed for multi-store accounts.
     """
-    return await stores.list_stores(_client, params)
+    return await stores.list_stores(get_client(), params)
 
 
 @mcp.tool(
@@ -398,7 +393,7 @@ async def printful_get_store_stats(params: GetStoreStatsInput) -> str:
     Returns sales, costs, profit, order counts, and fulfillment metrics.
     Date range cannot exceed 6 months.
     """
-    return await stores.get_store_statistics(_client, params)
+    return await stores.get_store_statistics(get_client(), params)
 
 
 # ========== V1 FALLBACK TOOLS ==========
@@ -420,7 +415,7 @@ async def printful_list_sync_products(params: ListSyncProductsInput) -> str:
     Sync products are pre-configured templates with saved designs.
     Currently only available via v1 API.
     """
-    return await sync.list_sync_products(_client, params)
+    return await sync.list_sync_products(get_client(), params)
 
 
 @mcp.tool(
@@ -440,7 +435,7 @@ async def printful_get_sync_product(params: GetSyncProductInput) -> str:
     Returns full sync product info including variants and designs.
     Currently only available via v1 API.
     """
-    return await sync.get_sync_product(_client, params)
+    return await sync.get_sync_product(get_client(), params)
 
 
 def main():
