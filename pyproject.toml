@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "printful-mcp"
+version = "0.1.0"
+description = "MCP server for Printful API — browse products, create orders, generate mockups from AI assistants"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Purple Horizons"}
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "printful",
+    "print-on-demand",
+    "ai",
+    "llm",
+    "claude",
+    "ecommerce"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "mcp>=0.9.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Purple-Horizons/printful-mcp"
+Repository = "https://github.com/Purple-Horizons/printful-mcp"
+Issues = "https://github.com/Purple-Horizons/printful-mcp/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+printful-mcp = "printful_mcp.server:main"

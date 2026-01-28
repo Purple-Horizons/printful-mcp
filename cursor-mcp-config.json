@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "printful": {
+      "command": "python",
+      "args": ["-m", "printful_mcp"],
+      "cwd": "/Users/gianni-dalerta/Projects/Purple-Horizons/printful-ph-mcp",
+      "env": {
+        "PRINTFUL_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
