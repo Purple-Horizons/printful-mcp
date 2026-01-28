@@ -638,7 +638,7 @@ Have an idea? [Suggest a feature](https://github.com/Purple-Horizons/printful-ph
 
 **MIT License** - Free to use, modify, and distribute
 
-[View License](LICENSE) • [Purple Horizons LLC](https://purplehorizons.io) • 2025
+[View License](LICENSE) • [Purple Horizons LLC](https://purplehorizons.io) • 2026
 
 </div>
 
