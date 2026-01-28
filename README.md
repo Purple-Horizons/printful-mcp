@@ -175,8 +175,6 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ## 💡 Usage Examples
 
-## 💡 Usage Examples
-
 ### 🎯 Example 1: Find the Perfect Product
 
 ```python
@@ -247,8 +245,6 @@ printful_create_mockup_task(
 </div>
 
 ---
-
-## 🛠️ Available Tools
 
 ## 🛠️ Available Tools
 
@@ -507,8 +503,6 @@ PRINTFUL_API_KEY=your-actual-key-here
 </details>
 
 ---
-
-## 🧪 Testing
 
 ## 🧪 Testing
 
