@@ -45,6 +45,9 @@ dev = [
     "pytest-asyncio>=0.21.0",
     "ruff>=0.1.0",
 ]
+reports = [
+    "openpyxl>=3.1.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/Purple-Horizons/printful-mcp"
