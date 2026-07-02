@@ -136,9 +136,20 @@ class PrintfulClient:
                 status_code=response.status_code
             )
         
-        # v2 API uses RFC 9457 format
+        # v2 API errors are returned as either RFC 9457 ({"detail"/"title"})
+        # or Printful's nested form {"data": <msg>, "error": {"message": ...}}.
+        # Extract whichever carries the real message so 4xx responses surface
+        # their actual text instead of a generic fallback.
         if version == "v2":
-            error_msg = error_data.get("detail", error_data.get("title", "Unknown error"))
+            nested = error_data.get("error") or {}
+            data_field = error_data.get("data")
+            error_msg = (
+                error_data.get("detail")
+                or error_data.get("title")
+                or nested.get("message")
+                or (data_field if isinstance(data_field, str) else None)
+                or f"API request failed with status {response.status_code}"
+            )
             raise PrintfulAPIError(
                 error_msg,
                 status_code=response.status_code,
